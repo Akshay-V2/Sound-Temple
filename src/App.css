@@ -1,0 +1,50 @@
+@font-face {
+    font-family: 'fliege';
+    src: url(./FliegeMonoVF.woff2);
+}
+
+body {
+    margin: 0;
+    background-image: url('./image-mesh-gradient.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.time {
+    font-family: 'fliege';
+    color: white;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.time-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    margin-left: 75px;
+    margin-bottom: 63px;
+    gap: 5px;
+}
+
+.ampm-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ampm {
+    font-family: 'fliege';
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 50%;
+}
+
+.time-active {
+    opacity: 100%;
+}
