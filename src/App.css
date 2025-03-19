@@ -48,3 +48,43 @@ body {
 .time-active {
     opacity: 100%;
 }
+
+.sounds-wrapper {
+    position: absolute;
+    top: 0;
+    margin-left: 55px;
+    margin-top: 63px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sound-name {
+    color: white;
+    font-family: 'fliege';
+    font-size: 24px;
+    font-weight: 500;
+    opacity: 50%;
+}
+
+.sound-active {
+    opacity: 100%;
+    font-size: 32px;
+}
+
+.sound-name-wrapper {
+    display: flex;
+    gap: 9px;
+    justify-content: center;
+    align-items: center;
+}
+
+.sound-indicator {
+    width: 11px;
+    height: 11px;
+    opacity: 0%;
+}
+
+.sound-indicator-active {
+    opacity: 100%;
+}

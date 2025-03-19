@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import Sound from './components/Sound';
 
 function App() {
   const [time, setTime] = useState(new Date());
@@ -26,6 +27,7 @@ function App() {
 
 
   return (
+    <>
     <div className='time-wrapper'>
       <div className='time'>{formatTime}</div>
 
@@ -36,6 +38,13 @@ function App() {
       </div>
       
     </div>
+
+    <div className='sounds-wrapper'>
+      <Sound isActive={true} soundName="Rain" isRunning={false} />
+      <Sound isActive={false} soundName="Classroom" isRunning={false} />
+      <Sound isActive={false} soundName="Birds" isRunning={true} />
+    </div>
+    </>
   )
 }
 
