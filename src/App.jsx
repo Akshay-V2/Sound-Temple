@@ -24,7 +24,24 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+const sounds = ["Rain", "Classroom", "Birds"];
+const [selectedSound, setSelectedSound] = useState(0);
+const [volume, setVolume] = useState(0);
 
+useEffect(() => {
+  const handleKeyPress = (event) => {
+    if (event.key === 'ArrowUp') {
+      setSelectedSound(prevSound => (prevSound - 1 + sounds.length) % sounds.length);
+    } else if (event.key === 'ArrowDown') {
+      setSelectedSound(prevSound => (prevSound + 1) % sounds.length);
+    }
+  };
+  window.addEventListener('keydown', handleKeyPress);
+
+  return () => {
+    window.removeEventListener('keydown', handleKeyPress);
+  };
+}, []);
 
   return (
     <>
@@ -40,9 +57,9 @@ function App() {
     </div>
 
     <div className='sounds-wrapper'>
-      <Sound isActive={true} soundName="Rain" isRunning={false} />
-      <Sound isActive={false} soundName="Classroom" isRunning={false} />
-      <Sound isActive={false} soundName="Birds" isRunning={true} />
+      {sounds.map((sound, index) => (
+        <Sound key={index} soundName={sound} isActive={index === selectedSound} isRunning={false}/>
+      ))}
     </div>
     </>
   )

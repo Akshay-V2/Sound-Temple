@@ -88,3 +88,38 @@ body {
 .sound-indicator-active {
     opacity: 100%;
 }
+
+.volume-arrow {
+    width: 16px;
+    height: 14px;
+}
+
+#volume-arrow-reverse {
+    transform: rotate(180deg);
+}
+
+.volume {
+    font-family: 'fliege';
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+}
+
+.volume-changer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    opacity: 0%;
+}
+
+.volume-changer-active {
+    opacity: 100%;
+}
+
+.sound-full {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
