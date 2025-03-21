@@ -28,11 +28,11 @@ const Sound = (props) => {
               : "volume-changer"
           }
         >
-          <img className="volume-arrow" src="../public/arrow.svg"></img>
+          <img className="volume-arrow" src="./arrow.svg"></img>
           <div className="volume">{props.volume}%</div>
           <img
             className="volume-arrow"
-            src="../public/arrow.svg"
+            src="./arrow.svg"
             id="volume-arrow-reverse"
           ></img>
         </div>
