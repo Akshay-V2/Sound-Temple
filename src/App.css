@@ -1,11 +1,11 @@
 @font-face {
-    font-family: 'fliege';
+    font-family: "fliege";
     src: url(../public/FliegeMonoVF.woff2);
 }
 
 body {
     margin: 0;
-    background-image: url('../public/image-mesh-gradient.png');
+    background-image: url("../public/image-mesh-gradient.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -13,7 +13,7 @@ body {
 }
 
 .time {
-    font-family: 'fliege';
+    font-family: "fliege";
     color: white;
     font-size: 24px;
     font-weight: 500;
@@ -38,7 +38,7 @@ body {
 }
 
 .ampm {
-    font-family: 'fliege';
+    font-family: "fliege";
     color: white;
     font-size: 10px;
     font-weight: 500;
@@ -61,10 +61,11 @@ body {
 
 .sound-name {
     color: white;
-    font-family: 'fliege';
+    font-family: "fliege";
     font-size: 24px;
     font-weight: 500;
     opacity: 50%;
+    transition: all cubic-bezier(0, -0.01, 0.49, 0.99) 300ms;
 }
 
 .sound-active {
@@ -83,6 +84,7 @@ body {
     width: 11px;
     height: 11px;
     opacity: 0%;
+    transition: all cubic-bezier(0, -0.01, 0.49, 0.99) 300ms;
 }
 
 .sound-indicator-active {
@@ -99,7 +101,7 @@ body {
 }
 
 .volume {
-    font-family: 'fliege';
+    font-family: "fliege";
     font-size: 20px;
     font-weight: 500;
     color: white;
@@ -111,10 +113,13 @@ body {
     align-items: center;
     gap: 8px;
     opacity: 0%;
+    translate: 50px;
+    transition: all cubic-bezier(0, -0.01, 0.49, 0.99) 300ms;
 }
 
 .volume-changer-active {
     opacity: 100%;
+    translate: 0px;
 }
 
 .sound-full {
