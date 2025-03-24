@@ -63,8 +63,15 @@ function App() {
     setSounds(newArray);
   };
 
+  // Track touch positions for swipe detection
+  const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
+  const [touchEnd, setTouchEnd] = useState({ x: 0, y: 0 });
+
+  // Minimum distance for a swipe to be registered
+  const minSwipeDistance = 30;
+
   useEffect(() => {
-    // Handle keyboard navigation
+    // Handle keyboard navigation (desktop)
     const handleKeyPress = (event) => {
       if (event.key === "ArrowUp") {
         setSelectedSound(
@@ -75,34 +82,10 @@ function App() {
       }
     };
 
-    // Handle scroll navigation
+    // Handle scroll/wheel navigation (desktop)
     let lastScrollTime = 0;
     const scrollThreshold = 200; // Milliseconds between scroll events to register
-    let prevScrollY = window.scrollY;
 
-    const handleScroll = () => {
-      // Throttle scroll events
-      const now = Date.now();
-      if (now - lastScrollTime < scrollThreshold) return;
-      lastScrollTime = now;
-
-      const currentScrollY = window.scrollY;
-
-      // Detect scroll direction
-      if (currentScrollY < prevScrollY) {
-        // Scrolling up
-        setSelectedSound(
-          (prevSound) => (prevSound - 1 + sounds.length) % sounds.length,
-        );
-      } else if (currentScrollY > prevScrollY) {
-        // Scrolling down
-        setSelectedSound((prevSound) => (prevSound + 1) % sounds.length);
-      }
-
-      prevScrollY = currentScrollY;
-    };
-
-    // Alternative wheel event handler - often works better for precise control
     const handleWheel = (event) => {
       // Throttle wheel events
       const now = Date.now();
@@ -120,21 +103,21 @@ function App() {
       }
     };
 
-    // Add event listeners
-    window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("wheel", handleWheel, { passive: true });
+    // Add event listeners (desktop only)
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      window.addEventListener("keydown", handleKeyPress);
+      window.addEventListener("wheel", handleWheel, { passive: true });
+    }
 
     // Clean up event listeners
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", handleWheel);
     };
-  }, [sounds.length]); // Added sounds.length as a dependency
+  }, [sounds.length]);
 
   useEffect(() => {
-    // Handle keyboard navigation for volume
+    // Handle keyboard navigation for volume (desktop)
     const handleVolumeChange = (event) => {
       if (event.key === "ArrowRight") {
         updateVolume("forward");
@@ -143,31 +126,10 @@ function App() {
       }
     };
 
-    // Handle horizontal scroll for volume
+    // Using wheel event for horizontal scrolling (desktop)
     let lastScrollTime = 0;
-    const scrollThreshold = 200; // Milliseconds between scroll events
-    let prevScrollX = window.scrollX;
+    const scrollThreshold = 200;
 
-    // For horizontal scroll detection
-    const handleScroll = () => {
-      const now = Date.now();
-      if (now - lastScrollTime < scrollThreshold) return;
-      lastScrollTime = now;
-
-      const currentScrollX = window.scrollX;
-
-      if (currentScrollX > prevScrollX) {
-        // Scrolling right
-        updateVolume("forward");
-      } else if (currentScrollX < prevScrollX) {
-        // Scrolling left
-        updateVolume("backward");
-      }
-
-      prevScrollX = currentScrollX;
-    };
-
-    // Using wheel event for horizontal scrolling (more reliable)
     const handleWheel = (event) => {
       // Check if it's a horizontal scroll
       // Some systems use shift+scroll for horizontal scrolling
@@ -186,18 +148,84 @@ function App() {
       }
     };
 
-    // Add event listeners
-    window.addEventListener("keydown", handleVolumeChange);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("wheel", handleWheel, { passive: true });
+    // Add event listeners (desktop only)
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      window.addEventListener("keydown", handleVolumeChange);
+      window.addEventListener("wheel", handleWheel, { passive: true });
+    }
 
     // Clean up
     return () => {
       window.removeEventListener("keydown", handleVolumeChange);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("wheel", handleWheel);
     };
   }, [selectedSound]);
+
+  // Handle touch events for mobile
+  const handleTouchStart = (e) => {
+    setTouchStart({
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    });
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd({
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    });
+  };
+
+  const handleTouchEnd = () => {
+    const horizontalDistance = touchStart.x - touchEnd.x;
+    const verticalDistance = touchStart.y - touchEnd.y;
+
+    // Determine if the swipe is primarily horizontal or vertical
+    if (Math.abs(horizontalDistance) > Math.abs(verticalDistance)) {
+      // Horizontal swipe (for volume control)
+      if (Math.abs(horizontalDistance) > minSwipeDistance) {
+        if (horizontalDistance > 0) {
+          // Swipe left
+          updateVolume("forward");
+        } else {
+          // Swipe right
+          updateVolume("backward");
+        }
+      }
+    } else {
+      // Vertical swipe (for sound selection)
+      if (Math.abs(verticalDistance) > minSwipeDistance) {
+        if (verticalDistance > 0) {
+          // Swipe up
+          setSelectedSound(
+            (prevSound) => (prevSound + 1 + sounds.length) % sounds.length,
+          );
+        } else {
+          // Swipe down
+          setSelectedSound((prevSound) => (prevSound - 1) % sounds.length);
+        }
+      }
+    }
+
+    // Reset touch positions
+    setTouchEnd({ x: 0, y: 0 });
+  };
+
+  // Add touch event handlers to the component
+  useEffect(() => {
+    const element =
+      document.getElementById("sound-controller") || document.body;
+
+    element.addEventListener("touchstart", handleTouchStart, { passive: true });
+    element.addEventListener("touchmove", handleTouchMove, { passive: true });
+    element.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    return () => {
+      element.removeEventListener("touchstart", handleTouchStart);
+      element.removeEventListener("touchmove", handleTouchMove);
+      element.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [touchStart, touchEnd, sounds.length, selectedSound]);
 
   const [rainAudio] = useState(new Audio(RainSound));
   rainAudio.loop = true;
