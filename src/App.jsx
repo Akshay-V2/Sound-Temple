@@ -8,6 +8,8 @@ import OceanSound from "../public/sounds/ocean.mp3";
 import FireplaceSound from "../public/sounds/fireplace.mp3";
 import WindSound from "../public/sounds/wind.mp3";
 
+import uichime from "../public/uichime.mp3";
+
 function App() {
   const [time, setTime] = useState(new Date());
   const [formatTime, setFormatTime] = useState(0);
@@ -288,10 +290,11 @@ function App() {
 
   const [isInitialized, setIsInitialized] = useState(false);
 
+  const [introChime] = useState(new Audio(uichime));
+
   const initializeSounds = () => {
     setIsInitialized(true);
-    rainAudio.play();
-    rainAudio.pause();
+    introChime.play();
   };
 
   useEffect(() => {
